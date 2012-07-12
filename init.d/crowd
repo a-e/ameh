@@ -1,0 +1,40 @@
+#!/bin/sh -e
+
+# [runlevels] [start order] [stop order]
+# The [start order] number for Crowd must be less than the corresponding number
+# for Jira, Confluence, and Fisheye, to ensure that Crowd is up and running to
+# allow authentication:
+
+# chkconfig: 2345 79 21
+# description: Crowd
+
+# Application name
+APP="Crowd"
+# User to run as
+USER="crowd"
+# Application directory
+APP_DIR="/opt/atlassian/crowd"
+# Start/stop scripts, relative to APP_DIR
+START_SH="start_crowd.sh"
+STOP_SH="stop_crowd.sh"
+
+case "$1" in
+    start)
+        echo "Starting $APP"
+        /bin/su -m $USER -c "$APP_DIR/$START_SH" # &> /dev/null"
+        ;;
+    stop)
+        echo "Stopping $APP"
+        /bin/su -m $USER -c "$APP_DIR/$STOP_SH" # &> /dev/null"
+        ;;
+    restart)
+        $0 stop
+        sleep 5
+        $0 start
+        ;;
+    *)
+        echo "Usage: $0 {start|restart|stop}"
+        exit 1
+        ;;
+esac
+

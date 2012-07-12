@@ -1,0 +1,36 @@
+#!/bin/sh -e
+
+# [runlevels] [start order] [stop order]
+# chkconfig: 2345 80 20
+# description: Fisheye
+
+# Application name
+APP="Fisheye"
+# User to run as
+USER="fisheye"
+# Application directory
+APP_DIR="/opt/atlassian/fisheye"
+# Start/stop scripts, relative to APP_DIR
+START_SH="bin/start.sh"
+STOP_SH="bin/stop.sh"
+export FISHEYE_OPTS="-Xmx1024m"
+
+case "$1" in
+    start)
+        echo "Starting $APP"
+        /bin/su -m $USER -c "$APP_DIR/$START_SH" # &> /dev/null"
+        ;;
+    stop)
+        echo "Stopping $APP"
+        /bin/su -m $USER -c "$APP_DIR/$STOP_SH" # &> /dev/null"
+        ;;
+    restart)
+        $0 stop
+        sleep 5
+        $0 start
+        ;;
+    *)
+        echo "Usage: $0 {start|restart|stop}"
+        exit 1
+        ;;
+esac
