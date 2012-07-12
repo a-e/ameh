@@ -16,9 +16,9 @@ This project was born out of recurring annoyances with Atlassian products, speci
 
 The name "ameh" came from "atlas meh", which you could see as a synonym for
 "atlas shrug" if you're into that sort of thing. The goal of this project is to
-make me (and possibly others) have a "meh" attitude towards Atlassian product
-maintenance, instead of the "please fire me and put me out of my misery"
-attitude that I have now.
+make me (and possibly others) have a "meh, no problem" attitude towards
+Atlassian product maintenance, instead of the "please fire me and put me out of
+my misery" attitude that I have now.
 
 
 Ideas
