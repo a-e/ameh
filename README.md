@@ -15,8 +15,9 @@ This project was born out of recurring annoyances with Atlassian products, speci
 - Too many user accounts created (jira1, jira2 etc.) when installing
 
 The name "ameh" came from "atlas meh", which you could see as a synonym for
-"atlas shrug" if you're into that sort of thing. The goal of this project is to
-make me (and possibly others) have a "meh, no problem" attitude towards
+"atlas shrug" if you're into that sort of thing. If you like acronyms, you
+could think of it as "Atlassian MaintenanceE Helper". The goal of this project
+is to make me (and possibly others) have a "meh, no problem" attitude towards
 Atlassian product maintenance, instead of the "please fire me and put me out of
 my misery" attitude that I have now.
 
@@ -40,6 +41,32 @@ Will probably need:
   installed, where their install/home directories are, what database backend
   you're using, etc.
 - A nice wrapper executable that can be installed system-wide
+
+
+Configuration
+-------------
+
+ameh stores its configuration in a file like this:
+
+    [jira]
+    install = /opt/atlassian/jira
+    home = /var/atlassian/application-data/jira-home
+    classes = %(install)s/atlassian-jira/WEB-INF/classes
+    crowd = %(classes)s/crowd.properties
+    db = %(home)s/dbconfig.xml
+
+    [confluence]
+    install = /opt/atlassian/confluence
+    home = /var/atlassian/application-data/confluence-home
+    db = %(home)s/confluence.cfg.xml
+
+    # Any apps you don't use will have their sections commented out
+    #[crowd]
+    #[fisheye]
+
+New configuration settings can be added using the `ameh` command-line, or by
+directly editing the configuration file (which will typically live in
+`/etc/ameh.conf`).
 
 
 Usage
