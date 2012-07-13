@@ -1,0 +1,109 @@
+#! /usr/bin/env python
+
+__doc__ = """ameh: Atlassian maintenance helper
+
+Usage::
+
+    ameh [command] [options]
+
+Command may be:
+
+    init:   Deploy init.d scripts
+    config: View configuration files
+    log:    View log files
+
+Run ``ameh [command]`` with no further arguments to get help.
+"""
+usage = __doc__
+
+import sys
+sys.path.append('.')
+import libameh
+
+class UsageError (Exception):
+    pass
+
+def exit_msg(usage, text=''):
+    """Print usage notes along with a message, then exit.
+    """
+    print(usage)
+    if text:
+        print(text)
+    sys.exit(1)
+
+def init_command(args):
+    """
+    Deploy init.d scripts for Atlassian applications.
+    """
+    pass
+
+def config_command(args):
+    """
+    View or edit Atlassian configuration files.
+
+    Usage::
+
+        ameh config [application] [property]
+        ameh config [application] [property] [value]
+    """
+    # Need at least an app name
+    if len(args) < 1:
+        raise UsageError("Please provide an application name")
+
+    app = args.pop(0)
+    config = libameh.config()
+
+    if app not in config.sections():
+        print("Application '%s' not found in config file." % app)
+        print("TODO: Automatically add it?")
+        sys.exit(1)
+
+    if args:
+        prop = args.pop(0)
+        print(config.get(app, prop))
+    # Print all app properties
+    else:
+        print("%s properties:" % app)
+        for prop, value in config.items(app):
+            print("%s: %s" % (prop, value))
+
+
+
+def log_command(args):
+    """
+    View log files for Atlassian applications.
+    """
+    pass
+
+command_functions = {
+    'init': init_command,
+    'config': config_command,
+    'log': log_command,
+}
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        exit_msg(usage)
+
+    args = sys.argv[1:]
+    command = args.pop(0)
+
+    if command not in command_functions:
+        exit_msg(usage, "Unknown command: '%s'" % command)
+
+    function = command_functions[command]
+
+    # All commands need at least one argument
+    if not args:
+        print(function.__doc__)
+        sys.exit(0)
+
+    # Run the command and catch exceptions
+    try:
+        command_functions[command](args)
+    except UsageError, message:
+        exit_msg(function.__doc__, message)
+    except KeyboardInterrupt:
+        print("Aborted!")
+        sys.exit(0)
+
