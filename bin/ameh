@@ -65,7 +65,10 @@ def config_command(args):
         raise UsageError("Please provide an application name")
 
     app = args.pop(0)
-    config = libameh.Config()
+    try:
+        config = libameh.config.Config()
+    except libameh.config.MissingConfig, e:
+        exit_msg(e.message)
 
     if args:
         prop = args.pop(0)
