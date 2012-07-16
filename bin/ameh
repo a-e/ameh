@@ -55,7 +55,8 @@ def init_command(args):
 
     app = args.pop(0)
     try:
-        libameh.initd.install(app)
+        #libameh.initd.install(app)
+        print(libameh.initd.generate(app))
     except NoPermission:
         pass
 
