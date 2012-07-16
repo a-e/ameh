@@ -1,18 +1,9 @@
 import os
 from ConfigParser import ConfigParser
-
-class UnknownApplication (RuntimeError):
-    """Raised when an application name is unknown or unconfigured.
-    """
-    pass
-
-class MissingConfig (RuntimeError):
-    """Raised when a given configuration file is missing.
-    """
-    pass
+from exceptions import MissingConfig, UnknownApplication
 
 class Config:
-    def __init__(self, filename='/etc/aameh.ini'):
+    def __init__(self, filename='/etc/ameh.ini'):
         if not os.path.isfile(filename):
             raise MissingConfig("Config file not found: '%s'" % filename)
 

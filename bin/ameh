@@ -23,9 +23,7 @@ import textwrap
 # Sys hack to use during development; should be removed later
 sys.path.append('.')
 import libameh
-
-class UsageError (Exception):
-    pass
+from libameh.exceptions import UsageError, MissingConfig, NoPermission
 
 def exit_msg(usage, text=''):
     """Print usage notes along with a message, then exit.
@@ -38,9 +36,29 @@ def exit_msg(usage, text=''):
 
 def init_command(args):
     """
-    Deploy init.d scripts for Atlassian applications.
+    init: Deploy init.d scripts for Atlassian applications.
+
+    Usage::
+
+        ameh init <application>
+
+    where <application> is the name of one of your configured Atlassian products.
+
+    Examples::
+
+        ameh init jira      # Install /etc/init.d/jira script
+        ameh init crowd     # Install /etc/init.d/crowd script
+
     """
-    pass
+    if len(args) < 1:
+        raise UsageError("Please provide an application name")
+
+    app = args.pop(0)
+    try:
+        libameh.initd.install(app)
+    except NoPermission:
+        pass
+
 
 def config_command(args):
     """
@@ -67,7 +85,7 @@ def config_command(args):
     app = args.pop(0)
     try:
         config = libameh.config.Config()
-    except libameh.config.MissingConfig, e:
+    except MissingConfig, e:
         exit_msg(e.message)
 
     if args:
