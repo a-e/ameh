@@ -2,32 +2,29 @@
 """
 
 import string
+from exceptions import UnknownProperty
 
+# This template can include any ``$property`` defined in ameh.ini
 _template = """
 #!/bin/sh -e
 
 # [runlevels] [start order] [stop order]
 # chkconfig: 2345 80 20
-# description: $app_cap
+# description: $app
 
-# Application name
-APP="$app_cap"
-# User to run as
+APP="$app"
 USER="$user"
-# Application directory
-APP_DIR="$app_dir"
-# Start/stop scripts, relative to APP_DIR
-START_SH="bin/startup.sh"
-STOP_SH="bin/shutdown.sh"
+START="$start"
+STOP="$stop"
 
 case "$$1" in
     start)
         echo "Starting $$APP"
-        /bin/su -m $$USER -c "$$APP_DIR/$$START_SH &> /dev/null"
+        /bin/su -m $$USER -c "$$START &> /dev/null"
         ;;
     stop)
         echo "Stopping $$APP"
-        /bin/su -m $$USER -c "$$APP_DIR/$$STOP_SH &> /dev/null"
+        /bin/su -m $$USER -c "$$STOP &> /dev/null"
         ;;
     restart)
         $$0 stop
@@ -48,12 +45,13 @@ def generate(app):
     """Generate and return an init.d script for the given app.
     """
     conf = config.Config()
-    print(conf.config.items(app))
-    mapping = {
-        'app': app,
-        'app_cap': app.capitalize(),
-        'user': app,
-        'app_dir': conf.property(app, 'install'),
-    }
-    return template.substitute(mapping)
+    props = conf.properties(app)
+
+    try:
+        script = template.substitute(props)
+    except KeyError, prop:
+        raise UnknownProperty(
+            "Missing %s property for application '%s'" % (prop, app))
+    else:
+        return script
 

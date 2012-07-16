@@ -42,10 +42,27 @@ class Config:
         self.check_app(app)
         print(self.config.get(app, prop))
 
-
     def property(self, app, prop):
         """Return the given property configured for an application.
         """
         self.check_app(app)
         return self.config.get(app, prop)
+
+    def defaults(self, app):
+        """Return all default properties for a given application.
+        """
+        return {
+            'app': app,
+            'user': app,
+            'install': '/opt/atlassian/%s' % app,
+            'home': '/var/atlassian/application-data/%s-home' % app,
+        }
+
+    def properties(self, app):
+        """Return a dict of all properties for the given application.
+        """
+        self.check_app(app)
+        props = self.defaults(app)
+        props.update(dict(self.config.items(app)))
+        return props
 

@@ -16,6 +16,11 @@ class UnknownApplication (AmehError):
     """
     pass
 
+class UnknownProperty (AmehError):
+    """Application property is unconfigured.
+    """
+    pass
+
 class MissingConfig (AmehError):
     """Configuration file is missing.
     """
