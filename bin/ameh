@@ -4,7 +4,7 @@ __doc__ = """ameh: Atlassian maintenance helper
 
 Usage::
 
-    ameh [command] [options]
+    ameh <command> [options]
 
 Command may be:
 
@@ -12,7 +12,7 @@ Command may be:
     config: View configuration files
     log:    View log files
 
-Run ``ameh [command]`` with no further arguments to get help.
+Run ``ameh <command>`` with no further arguments to get help.
 """
 usage = __doc__
 
@@ -39,33 +39,34 @@ def init_command(args):
 
 def config_command(args):
     """
-    View or edit Atlassian configuration files.
+    config: View or edit Atlassian configuration files.
 
     Usage::
 
-        ameh config [application] [property]
-        ameh config [application] [property] [value]
+        ameh config <application> [property]
+        ameh config <application> [property] [value]
+
+    where <application> is the name of one of your configured Atlassian products.
+
+    Examples::
+
+        ameh config all         # Show all configuration for all applications
+        ameh config jira        # Show all Jira configuration
+        ameh config jira db     # Show path to Jira's database configuration file
+
     """
     # Need at least an app name
     if len(args) < 1:
         raise UsageError("Please provide an application name")
 
     app = args.pop(0)
-    config = libameh.config()
-
-    if app not in config.sections():
-        print("Application '%s' not found in config file." % app)
-        print("TODO: Automatically add it?")
-        sys.exit(1)
+    config = libameh.Config()
 
     if args:
         prop = args.pop(0)
-        print(config.get(app, prop))
-    # Print all app properties
+        config.show_prop(app, prop)
     else:
-        print("%s properties:" % app)
-        for prop, value in config.items(app):
-            print("%s: %s" % (prop, value))
+        config.show_app(app)
 
 
 
