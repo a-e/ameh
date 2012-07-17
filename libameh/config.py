@@ -25,20 +25,6 @@ class Config:
             raise UnknownApplication(
                 "Application '%s' not defined in '%s'" % (app, self.filename))
 
-
-    def show_app(self, app):
-        """Print out properties for the given application.
-        """
-        if app == 'all':
-            show_apps = self.apps()
-        else:
-            self.check_app(app)
-            show_apps = [app]
-
-        for app in show_apps:
-            for prop, value in self.config.items(app):
-                print("%s %s: %s" % (app, prop, value))
-
     def property(self, app, prop):
         """Return the given property configured for an application.
         """
@@ -55,11 +41,23 @@ class Config:
             'home': '/var/atlassian/application-data/%s-home' % app,
         }
 
-    def properties(self, app):
-        """Return a dict of all properties for the given application.
+    def properties_dict(self, app):
+        """Return a dict of all properties for the given application,
+        including all default properties.
         """
         self.check_app(app)
         props = self.defaults(app)
         props.update(dict(self.config.items(app)))
         return props
+
+    def properties_string(self, app):
+        """Return a string of all properties for the given application,
+        including all default properties.
+        """
+        props = self.properties_dict(app)
+        prop_lines = [
+            "%s %s: %s" % (app, prop, value)
+            for (prop, value) in props.items()
+        ]
+        return '\n'.join(prop_lines)
 

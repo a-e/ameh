@@ -42,7 +42,7 @@ template = string.Template(_template)
 def generate(app, config):
     """Generate and return an init.d script for the given app.
     """
-    props = config.properties(app)
+    props = config.properties_dict(app)
 
     try:
         script = template.substitute(props)

@@ -27,8 +27,14 @@ class TestConfig (unittest.TestCase):
         self.assertRaises(libameh.exceptions.UnknownApplication,
                           self.config.check_app, 'bogus')
 
-    def test_show_app(self):
-        pass
+    def test_properties_string(self):
+        props = self.config.properties_string('jira')
+        self.assertIn('jira home', props)
+        self.assertIn('jira install', props)
+
+    def test_properties_string_unknown_app(self):
+        self.assertRaises(libameh.exceptions.UnknownApplication,
+                          self.config.properties_string, 'bogus')
 
     def test_property(self):
         self.assertEqual(self.config.property('jira', 'install'),
@@ -46,7 +52,12 @@ class TestConfig (unittest.TestCase):
             'home': '/var/atlassian/application-data/jira-home',
         })
 
-    def test_properties(self):
-        pass
+    def test_properties_dict(self):
+        props = self.config.properties_dict('jira')
+        self.assertIn('home', props)
+        self.assertIn('install', props)
 
+    def test_properties_dict_unknown_app(self):
+        self.assertRaises(libameh.exceptions.UnknownApplication,
+                          self.config.properties_dict, 'bogus')
 
