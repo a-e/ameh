@@ -6,7 +6,11 @@ The short version::
 
     $ pip install virtualenvwrapper
     $ mkvirtualenv ameh
-    $ pip install -r requirements.txt
+
+Python packages needed for development are listed in ``dev-req.txt``; you can
+install them with pip like so::
+
+    $ pip install -r dev-req.txt
 
 Due to the preponderance of really old Python versions in enterprise
 environments like CentOS, the code in ameh is designed to be compatible with
