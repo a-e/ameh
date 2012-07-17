@@ -34,6 +34,18 @@ def exit_msg(usage, text=''):
         print(text)
     sys.exit(1)
 
+
+def get_config(ini_file='/etc/ameh.ini'):
+    """Return a Config instance initialized from the given INI file.
+    """
+    try:
+        config = libameh.config.Config(ini_file)
+    except MissingConfig, e:
+        exit_msg(e.message)
+    else:
+        return config
+
+
 def init_command(args):
     """
     init: Deploy init.d scripts for Atlassian applications.
@@ -55,8 +67,7 @@ def init_command(args):
 
     app = args.pop(0)
     try:
-        #libameh.initd.install(app)
-        print(libameh.initd.generate(app))
+        print(libameh.initd.generate(app), get_config())
     except NoPermission:
         pass
 
@@ -84,14 +95,11 @@ def config_command(args):
         raise UsageError("Please provide an application name")
 
     app = args.pop(0)
-    try:
-        config = libameh.config.Config()
-    except MissingConfig, e:
-        exit_msg(e.message)
+    config = get_config()
 
     if args:
         prop = args.pop(0)
-        config.show_prop(app, prop)
+        print(config.property(app, prop))
     else:
         config.show_app(app)
 

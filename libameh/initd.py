@@ -39,13 +39,10 @@ esac
 """
 template = string.Template(_template)
 
-import config
-
-def generate(app):
+def generate(app, config):
     """Generate and return an init.d script for the given app.
     """
-    conf = config.Config()
-    props = conf.properties(app)
+    props = config.properties(app)
 
     try:
         script = template.substitute(props)

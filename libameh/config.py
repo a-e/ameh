@@ -19,9 +19,12 @@ class Config:
     def check_app(self, app):
         """Raise UnknownApplication if the given app is not configured.
         """
-        if app not in self.apps():
+        if app in self.apps():
+            return True
+        else:
             raise UnknownApplication(
                 "Application '%s' not defined in '%s'" % (app, self.filename))
+
 
     def show_app(self, app):
         """Print out properties for the given application.
@@ -35,12 +38,6 @@ class Config:
         for app in show_apps:
             for prop, value in self.config.items(app):
                 print("%s %s: %s" % (app, prop, value))
-
-    def show_prop(self, app, prop):
-        """Print out the value of a single property for the given application.
-        """
-        self.check_app(app)
-        print(self.config.get(app, prop))
 
     def property(self, app, prop):
         """Return the given property configured for an application.
