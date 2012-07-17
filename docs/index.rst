@@ -17,6 +17,7 @@ Contents:
     motivation
     configuration
     usage
+    development
     ideas
 
 Indices and tables
