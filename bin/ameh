@@ -3,17 +3,17 @@
 script_name = "ameh: Atlassian maintenance helper"
 
 __doc__ = """
-Usage::
+Usage:
 
     ameh <command> [options]
 
 Command may be:
 
-    init:   Deploy init.d scripts
+    init:   Generate init.d scripts
     config: View configuration files
     log:    View log files
 
-Run ``ameh <command>`` with no further arguments to get help.
+Run `ameh <command>` with no further arguments to get help.
 """
 usage = __doc__
 
@@ -48,18 +48,23 @@ def get_config(ini_file='/etc/ameh.ini'):
 
 def init_command(args):
     """
-    init: Deploy init.d scripts for Atlassian applications.
+    init: Generate init.d scripts for Atlassian applications.
 
     Usage::
 
         ameh init <application>
 
-    where <application> is the name of one of your configured Atlassian products.
+    where <application> is the name of one of your configured Atlassian
+    products. This command only generates a script and prints it on standard
+    output; if you want to install the script in your /etc/init.d (normally
+    requiring superuser privileges), redirect the output to the desired
+    location using ``tee``.
 
     Examples::
 
-        ameh init jira      # Install /etc/init.d/jira script
-        ameh init crowd     # Install /etc/init.d/crowd script
+        ameh init jira
+        ameh init crowd
+        ameh init jira | sudo tee /etc/init.d/jira
 
     """
     if len(args) < 1:
@@ -67,7 +72,7 @@ def init_command(args):
 
     app = args.pop(0)
     try:
-        print(libameh.initd.generate(app), get_config())
+        print(libameh.initd.generate(app, get_config()))
     except NoPermission:
         pass
 

@@ -8,15 +8,13 @@ The short version::
     $ mkvirtualenv ameh
     $ pip install -r requirements.txt
 
+Due to the preponderance of really old Python versions in enterprise
+environments like CentOS, the code in ameh is designed to be compatible with
+Python 2.4. If you contribute new code to ameh, please avoid using features from
+newer versions of Python.
 
-Testing
--------
-
-ameh is tested with `py.test`_. Install it using pip::
-
-    $ pip install -U pytest
-
-Then run it from the ``ameh`` root directory::
+Unit tests are in the ``tests`` directory. You can run them with `py.test`_ like
+this::
 
     $ py.test
 

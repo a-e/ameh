@@ -5,8 +5,8 @@ import string
 from exceptions import UnknownProperty
 
 # This template can include any ``$property`` defined in ameh.ini
-_template = """
-#!/bin/sh -e
+_template = """#!/bin/sh -e
+# /etc/init.d/$app
 
 # [runlevels] [start order] [stop order]
 # chkconfig: 2345 80 20
